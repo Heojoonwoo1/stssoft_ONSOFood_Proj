@@ -42,6 +42,24 @@ $(document).ready(function(){
     }
   });
 
+  // [지점 메인] 상품 상세 팝업
+  let mealExpPop = $('.card-thumb-exp-wrap');
+
+  $('.card-thumb-btn').on('click',function(){
+    let imgSrc = $(this).siblings('img').attr('src');
+
+    popDim.show();
+    body.addClass('no-scr');
+    mealExpPop.find('.card-thumb-exp-img img').attr('src',imgSrc);
+    mealExpPop.fadeIn();
+  });
+
+  $('.card-thumb-exp-close').on('click',function(){
+    popDim.fadeOut();
+    body.removeClass('no-scr');
+    mealExpPop.fadeOut();
+  });
+
   // [공통] 메뉴 1뎁스 클릭
   $('.depth1-btn').on('click', function () {
     let $this = $(this);
@@ -51,5 +69,5 @@ $(document).ready(function(){
 
     $('.depth1-btn').removeClass('on');
     $this.addClass('on');
-});
+  });
 });
