@@ -144,13 +144,17 @@ if ($config['cf_cert_use'] && ($config['cf_cert_simple'] || $config['cf_cert_ipi
 				</li>
 				<li>
 	            <?php if ($config['cf_use_hp'] || ($config["cf_cert_use"] && ($config['cf_cert_hp'] || $config['cf_cert_simple']))) {  ?>
-	                <label for="reg_mb_hp">휴대폰번호<?php if (!empty($hp_required)) { ?> (필수)<?php } ?><?php echo $desc_phone ?></label>
-	                
-	                <input type="text" name="mb_hp" value="<?php echo get_text($member['mb_hp']) ?>" id="reg_mb_hp" <?php echo $hp_required; ?> <?php echo $hp_readonly; ?> class="frm_input full_input <?php echo $hp_required; ?> <?php echo $hp_readonly; ?>" maxlength="20" placeholder="휴대폰번호">
-	                <?php if ($config['cf_cert_use'] && ($config['cf_cert_hp'] || $config['cf_cert_simple'])) { ?>
-	                <input type="hidden" name="old_mb_hp" value="<?php echo get_text($member['mb_hp']) ?>">
-	                <?php } ?>
-	            <?php }  ?>
+					<label for="reg_mb_hp">휴대폰번호<?php if (!empty($hp_required)) { ?> (필수)<?php } ?><?php echo $desc_phone ?></label>
+					<input type="text" name="mb_hp" value="<?php echo get_text($member['mb_hp']) ?>" id="reg_mb_hp" <?php echo $hp_required; ?> <?php echo $hp_readonly; ?> class="frm_input full_input <?php echo $hp_required; ?> <?php echo $hp_readonly; ?>" maxlength="20" placeholder="휴대폰번호">
+					
+					<input type="text" name="verification_code" id="verification_code" placeholder="인증번호">
+					<button type="button" id="send_code">인증번호 보내기</button>
+					<button type="button" id="verify_code">확인</button>
+
+					<div id="timer"></div> <!-- 카운트다운을 표시할 부분 -->
+
+					<input type="hidden" name="old_mb_hp" value="<?php echo get_text($member['mb_hp']) ?>">
+				<?php } ?>
 	            </li>
 	
 	            <?php if ($config['cf_use_addr']) { ?>
@@ -500,6 +504,42 @@ function fregisterform_submit(f)
     return true;
 }
 
+$(document).ready(function() {
+    $('#send_code').click(function() {
+        var phoneNumber = $('#reg_mb_hp').val();
+        $.post('send_code.php', { phone_number: phoneNumber }, function(response) {
+            alert(response); // 서버 응답을 사용자에게 알림
+            startCountdown(); // 카운트다운 시작
+        });
+    });
+
+    $('#verify_code').click(function() {
+        var code = $('#verification_code').val();
+        $.post('verify_code.php', { verification_code: code }, function(response) {
+            alert(response); // 서버 응답을 사용자에게 알림
+        });
+    });
+
+    function startCountdown() {
+        var countdownTime = 180; // 3분
+        var timer = $('#timer');
+        
+        function updateTimer() {
+            var minutes = Math.floor(countdownTime / 60);
+            var seconds = countdownTime % 60;
+            timer.text(minutes + "분 " + seconds + "초");
+            countdownTime--;
+            if (countdownTime < 0) {
+                timer.text("시간이 만료되었습니다.");
+                clearInterval(interval);
+            }
+        }
+
+        var interval = setInterval(updateTimer, 1000);
+        updateTimer(); // 처음 호출
+    }
+});
+
 jQuery(function($){
 	//tooltip
     $(document).on("click", ".tooltip_icon", function(e){
@@ -510,5 +550,7 @@ jQuery(function($){
 });
 
 </script>
+
+
 
 <!-- } 회원정보 입력/수정 끝 -->
