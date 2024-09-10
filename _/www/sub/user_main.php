@@ -113,6 +113,20 @@ if(!$is_member){
       </div>
     </div>
 
+    <!-- 식단 이미지 확대 팝업 { -->
+    <!-- 이미지 src 스크립트 처리 -->
+    <div class="card-thumb-exp-wrap">
+      <div class="container">
+        <div class="card-thumb-exp-img-box">
+          <button class="card-thumb-exp-close"><span></span></button>
+          <div class="card-thumb-exp-img">
+            <img src="/source/img/menu-card-dthumb01.png" alt="">
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- } 식단 이미지 확대 팝업 -->
+
   </div>
 </div>
 
